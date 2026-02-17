@@ -2,6 +2,7 @@ package edu.touro.las.mcon364.func_prog.exercises;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -39,8 +40,7 @@ public class FunctionalInterfaceExercises {
      *
      */
     public static Supplier<Integer> currentYearSupplier() {
-      // TODO
-        return null;
+        return () -> LocalDate.now().getYear();
     }
 
     /**
@@ -48,8 +48,8 @@ public class FunctionalInterfaceExercises {
      * between 1 and 100.
      */
     public static Supplier<Integer> randomScoreSupplier() {
-        // TODO
-        return null;
+        Random random = new Random();
+        return () -> random.nextInt(1, 101);
     }
 
     // =========================================================
@@ -61,8 +61,11 @@ public class FunctionalInterfaceExercises {
      * a string is all uppercase.
      */
     public static Predicate<String> isAllUpperCase() {
-        // TODO
-        return null;
+        return string -> {
+            if (string == null || string.isEmpty())
+                return false;
+            return string.equals(string.toUpperCase());
+        }
     }
 
     /**
@@ -73,7 +76,9 @@ public class FunctionalInterfaceExercises {
      */
     public static Predicate<Integer> positiveAndDivisibleByFive() {
         // TODO
-        return null;
+        Predicate<Integer> isPositive = num -> num > 0;
+        Predicate<Integer> divisibleByFive = num -> num % 5 == 0;
+        return num -> isPositive.and(divisibleByFive);
     }
 
     // =========================================================
