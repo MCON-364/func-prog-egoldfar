@@ -1,7 +1,9 @@
 package edu.touro.las.mcon364.func_prog.homework;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.function.*;
 
 /**
@@ -30,7 +32,6 @@ public class SmartDataEngine {
     // ============================================================
 
     /**
-     * TODO:
      * Implement a generic pipeline.
      *
      * Behavior:
@@ -44,7 +45,7 @@ public class SmartDataEngine {
             Function<T, R> mapper,
             Consumer<R> consumer
     ) {
-        // TODO
+        input.stream().filter(filter).map(mapper).forEach(consumer);
     }
 
     // ============================================================
@@ -52,19 +53,19 @@ public class SmartDataEngine {
     // ============================================================
 
     /**
-     * TODO:
      * Implement a safe divide method.
      *
      * - If denominator is 0 → return Optional.empty()
      * - Otherwise return Optional.of(result)
      */
     public static Optional<Double> safeDivide(double a, double b) {
-        // TODO
-        return Optional.empty();
+        if (b == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(a / b);
     }
 
     /**
-     * TODO:
      * Use Optional chaining:
      *
      *  - Divide two numbers using safeDivide(...)
@@ -78,8 +79,7 @@ public class SmartDataEngine {
      *  - Use orElse(...) to provide a default value when empty.
      */
     public static double processDivision(double a, double b) {
-        // TODO
-        return 0;
+        return safeDivide(a, b).map(num -> num * 10).orElse(-1.0);
     }
 
     // ============================================================
@@ -87,7 +87,6 @@ public class SmartDataEngine {
     // ============================================================
 
     /**
-     * TODO:
      * Use switch expression with pattern matching.
      *
      * Behavior:
@@ -109,7 +108,12 @@ public class SmartDataEngine {
         //     default -> ...
         // };
 
-        return null;
+        return switch (input) {
+            case Integer i -> i*i;
+            case String s -> s.toUpperCase();
+            case Double d -> Math.round(d);
+            default -> "Unsupported";
+        };
     }
 
     // ============================================================
@@ -117,7 +121,6 @@ public class SmartDataEngine {
     // ============================================================
 
     /**
-     * TODO:
      * Create and return a Function<String, Integer>
      * that performs the following transformations in order:
      *
@@ -146,8 +149,11 @@ public class SmartDataEngine {
      */
 
     public static Function<String, Integer> buildStringLengthPipeline() {
-        // TODO
-        return null;
+        Function<String, String> trim = String::trim;
+        Function<String, String> toLowerCase = String::toLowerCase;
+        Function<String, Integer> stringLengthFunction = String::length;
+
+        return s -> trim.andThen(toLowerCase).andThen(stringLengthFunction).apply(s);
     }
 
     // ============================================================
@@ -155,7 +161,6 @@ public class SmartDataEngine {
     // ============================================================
 
    /**
-     * TODO:
      * Implement this method using ALL four functional interfaces:
      *
      *  - Supplier  → generate random integers
@@ -187,7 +192,19 @@ public class SmartDataEngine {
      */
 
     public static void runScoreProcessor() {
-        // TODO
+        Supplier<Integer> getNum = () -> {
+                Random random = new Random();
+                return random.nextInt(1, 101);
+        };
+        Predicate<Integer> greaterThanFifty = i -> i > 50;
+        Function<Integer, String> scoreToString = i -> String.format("Score: %d", i);
+        Consumer<String> printString = System.out::println;
+
+        List<Integer> scores = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            scores.add(getNum.get());
+        }
+        pipeline(scores, greaterThanFifty, scoreToString, printString);
     }
 
 }
