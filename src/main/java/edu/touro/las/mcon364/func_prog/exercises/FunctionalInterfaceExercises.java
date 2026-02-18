@@ -194,6 +194,22 @@ public class FunctionalInterfaceExercises {
      * Print only those above 70.
      */
     public static void generateAndFilterScores() {
-        // TODO
+        Supplier<List<Integer>> getScores = () -> {
+            Random random = new Random();
+            List<Integer> scores = new ArrayList<>();
+            for (int i = 0; i < 5; i++)
+                scores.add(random.nextInt(1, 101));
+            return scores;
+        };
+        Predicate<Integer> aboveSeventy = num -> num > 70;
+        Consumer<List<Integer>> printScores = scores -> {
+            for (int s : scores) {
+                System.out.println(s);
+            }
+        };
+
+        List<Integer> gradesAboveSeventy = getScores.get().stream().filter(aboveSeventy).toList();
+        printScores.accept(gradesAboveSeventy);
+
     }
 }
